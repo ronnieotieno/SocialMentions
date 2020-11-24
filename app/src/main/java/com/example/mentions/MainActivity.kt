@@ -15,7 +15,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var customMentionAdapter: ArrayAdapter<String>
     private lateinit var userService: UsersService
-    private var previousClickedName: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -47,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun startSearching(queryString: String) {
 
-        if (queryString.endsWith(" ") || previousClickedName == queryString) return
+        if (queryString.endsWith(" ")) return
 
         //Using coroutine, feel free to use any or even a new background thread.
         //You can use the enqueue method and write the following logic on onsuccesfull method.
