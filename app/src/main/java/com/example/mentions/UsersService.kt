@@ -5,7 +5,7 @@ import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface Users {
+interface UsersService {
 
     @GET("names")
     suspend fun getUsers(

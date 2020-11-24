@@ -14,7 +14,7 @@ import kotlinx.coroutines.withContext
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var customMentionAdapter: ArrayAdapter<String>
-    private lateinit var userClass: Users
+    private lateinit var userService: UsersService
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -25,44 +25,49 @@ class MainActivity : AppCompatActivity() {
         val retrofit = createRetrofit()
         customMentionAdapter = UsersAdapter(this)
 
+        userService = retrofit.create(UsersService::class.java)
 
-        userClass = retrofit.create(Users::class.java)
-
-
-        binding.EdittextMention.mentionAdapter = customMentionAdapter
-        binding.EdittextMention.setMentionTextChangedListener { _, text ->
-            startSearching(text)
+        binding.EdittextMention.apply {
+            mentionAdapter = customMentionAdapter
+            setMentionTextChangedListener { _, text ->
+                startSearching(text)
+            }
         }
 
     }
 
-    private fun startSearching(text: String) {
+    private fun startSearching(queryString: String) {
 
-        if (text.endsWith(" ")) return
+        if (queryString.endsWith(" ")) return
 
-        //Using courotine, feel free to use any or even a new background thread.
+        //Using coroutine, feel free to use any or even a new background thread.
         //You can use the enqueue method and write the following logic on onsuccesfull method.
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val users = userClass.getUsers(
-                    text
+                val users = userService.getUsers(
+                    queryString
                 )
                 withContext(Dispatchers.Main) {
-                    customMentionAdapter.clear()
-                    customMentionAdapter.addAll(users.data)
-                    customMentionAdapter.notifyDataSetChanged()
+                    customMentionAdapter.apply {
+                        clear()
+                        addAll(users.data)
+                        notifyDataSetChanged()
+                    }
 
                     //Workaround method to initiate show adapter with new items
                     //probably not the best, feel free to contribute.
 
-                    binding.EdittextMention.text.insert(
-                        binding.EdittextMention.text.toString().length,
-                        " "
-                    )
-                    val length: Int = binding.EdittextMention.text.length
-                    if (length > 0) {
-                        binding.EdittextMention.text.delete(length - 1, length)
+                    binding.EdittextMention.apply {
+                        text.insert(
+                            text.toString().length,
+                            " "
+                        )
+                        val length: Int = text.length
+                        if (length > 0) {
+                            text.delete(length - 1, length)
+                        }
                     }
+
                 }
 
             } catch (t: Throwable) {
