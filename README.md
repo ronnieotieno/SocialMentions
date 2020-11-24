@@ -20,6 +20,9 @@ Search either of the following names
     "message": "names found successfully"
 }
 ```
+## Library used
+
+https://github.com/hendraanggrian/socialview
 
 ## Demo
 <img src="art/demo.gif" width=400/>
