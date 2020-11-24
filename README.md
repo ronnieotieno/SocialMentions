@@ -1,5 +1,5 @@
 # SocialMentions
-Use ("@") to mention people or topics as used in social media apps. The App loads the users to be from a Rest API using Retrofit
+Use ("@") to mention people or topics as used in social media apps. The App loads the users to be mentioned from a Rest API using Retrofit
 
 ## Data 
 Search either of the following names
